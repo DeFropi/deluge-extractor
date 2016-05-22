@@ -123,6 +123,7 @@ class Core(CorePluginBase):
         self.config = deluge.configmanager.ConfigManager("simpleextractor.conf", DEFAULT_PREFS)
         if not self.config["extract_path"]:
             self.config["extract_path"] = deluge.configmanager.ConfigManager("core.conf")["download_location"]
+        self.config.save()
         component.get("EventManager").register_event_handler("TorrentFinishedEvent", self._on_torrent_finished)
     def disable(self):
         component.get("EventManager").deregister_event_handler("TorrentFinishedEvent", self._on_torrent_finished)
