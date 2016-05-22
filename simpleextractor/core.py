@@ -58,9 +58,9 @@ DEFAULT_PREFS = {
 
 if windows_check():
     win_7z_exes = [
-        '7z.exe',
         'C:\\Program Files\\7-Zip\\7z.exe',
         'C:\\Program Files (x86)\\7-Zip\\7z.exe',
+        '7z.exe',
     ]
 
     import _winreg
