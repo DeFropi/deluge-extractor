@@ -66,10 +66,12 @@ if windows_check():
     import _winreg
     try:
         hkey = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, "Software\\7-Zip")
+        log.debug("EXTRACTOR: hkey: ", hkey)
     except WindowsError:
         pass
     else:
         win_7z_path = os.path.join(_winreg.QueryValueEx(hkey, "Path")[0], "7z.exe")
+        log.debug("EXTRACTOR: win 7z path:", win_7z_path)
         _winreg.CloseKey(hkey)
         win_7z_exes.insert(1, win_7z_path)
 
@@ -86,7 +88,9 @@ if windows_check():
     ]
     for win_7z_exe in win_7z_exes:
         if which(win_7z_exe):
+            log.debug("EXTRACTOR: win7zexe", win_7z_exe)
             EXTRACT_COMMANDS = dict.fromkeys(exts_7z, [win_7z_exe, switch_7z])
+            log.debug("EXTRACTOR: extract commands", EXTRACT_COMMANDS)
             break
 else:
     required_cmds=["unrar", "unzip", "tar", "unxz", "unlzma", "7zr", "bunzip2"]
@@ -181,7 +185,7 @@ class Core(CorePluginBase):
                 log.error("EXTRACTOR: Extract failed: %s (%s)", fpath, torrent_id)
 
             # Run the command and add some callbacks
-            log.debug("EXTRACTOR: Extracting %s with %s %s to %s", fpath, cmd[0], cmd[1], dest)
+            log.debug("EXTRACTOR: Extracting fpath:%s with cmd[0]:%s cmd[1]:%s to dest: %s", fpath, cmd[0], cmd[1], dest)
             d = getProcessValue(cmd[0], cmd[1].split() + [str(fpath)], {}, str(dest))
             d.addCallback(on_extract_success, torrent_id, fpath)
             d.addErrback(on_extract_failed, torrent_id, fpath)
