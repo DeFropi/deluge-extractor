@@ -58,13 +58,13 @@ class GtkUI(GtkPluginBase):
         self.on_show_prefs()
 
     def disable(self):
-        component.get("Preferences").remove_page(_("Extractor"))
+        component.get("Preferences").remove_page(_("SimpleExtractor"))
         component.get("PluginManager").deregister_hook("on_apply_prefs", self.on_apply_prefs)
         component.get("PluginManager").deregister_hook("on_show_prefs", self.on_show_prefs)
         del self.glade
 
     def on_apply_prefs(self):
-        log.debug("applying prefs for Extractor")
+        log.debug("applying prefs for SimpleExtractor")
         if client.is_localhost():
             path = self.glade.get_widget("folderchooser_path").get_filename()
         else:
@@ -76,7 +76,7 @@ class GtkUI(GtkPluginBase):
             "in_place_extraction": self.glade.get_widget("chk_in_place_extraction").get_active()
         }
 
-        client.extractor.set_config(config)
+        client.simpleextractor.set_config(config)
 
     def on_show_prefs(self):
         if client.is_localhost():
@@ -88,11 +88,11 @@ class GtkUI(GtkPluginBase):
 
         def on_get_config(config):
             if client.is_localhost():
-                self.glade.get_widget("folderchooser_path").set_current_folder(config["extract_path"])
+                self.glade.get_widget("folderchooser_path").set_current_folder(config['extract_path'])
             else:
-                self.glade.get_widget("entry_path").set_text(config["extract_path"])
+                self.glade.get_widget("entry_path").set_text(config['extract_path'])
 
-            self.glade.get_widget("chk_use_name").set_active(config["use_name_folder"])
-            self.glade.get_widget("chk_in_place_extraction").set_active(config["in_place_extraction"])
+            self.glade.get_widget("chk_use_name").set_active(config['use_name_folder'])
+            self.glade.get_widget("chk_in_place_extraction").set_active(config['in_place_extraction'])
 
-        client.extractor.get_config().addCallback(on_get_config)
+        client.simpleextractor.get_config().addCallback(on_get_config)
